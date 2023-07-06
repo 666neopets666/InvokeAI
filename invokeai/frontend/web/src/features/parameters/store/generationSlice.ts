@@ -211,9 +211,8 @@ export const generationSlice = createSlice({
       const { image_name, width, height } = action.payload;
       state.initialImage = { imageName: image_name, width, height };
     },
-    modelSelected: (state, action: PayloadAction<string>) => {
-      const [base_model, type, name] = action.payload.split('/');
-      state.model = { id: action.payload, base_model, name, type };
+    modelChanged: (state, action: PayloadAction<ModelParam>) => {
+      state.model = action.payload;
     },
     vaeSelected: (state, action: PayloadAction<string>) => {
       state.vae = action.payload;
@@ -267,7 +266,7 @@ export const {
   setHorizontalSymmetrySteps,
   setVerticalSymmetrySteps,
   initialImageChanged,
-  modelSelected,
+  modelChanged,
   vaeSelected,
   setShouldUseNoiseSettings,
   setSeamlessXAxis,
