@@ -48,7 +48,7 @@ export interface GenerationState {
   horizontalSymmetrySteps: number;
   verticalSymmetrySteps: number;
   model: ModelParam;
-  vae: VAEParam;
+  vae: ModelParam;
   seamlessXAxis: boolean;
   seamlessYAxis: boolean;
 }
@@ -81,8 +81,8 @@ export const initialGenerationState: GenerationState = {
   shouldUseSymmetry: false,
   horizontalSymmetrySteps: 0,
   verticalSymmetrySteps: 0,
-  model: '',
-  vae: '',
+  model: null,
+  vae: null,
   seamlessXAxis: false,
   seamlessYAxis: false,
 };
@@ -212,17 +212,25 @@ export const generationSlice = createSlice({
       state.initialImage = { imageName: image_name, width, height };
     },
     modelSelected: (state, action: PayloadAction<string>) => {
-      state.model = action.payload;
+      const [base_model, type, name] = action.payload.split('/');
+      state.model = { id: action.payload, base_model, name, type };
     },
     vaeSelected: (state, action: PayloadAction<string>) => {
-      state.vae = action.payload;
+      const [base_model, type, name] = action.payload.split('/');
+      state.vae = { id: action.payload, base_model, name, type };
     },
   },
   extraReducers: (builder) => {
     builder.addCase(configChanged, (state, action) => {
       const defaultModel = action.payload.sd?.defaultModel;
       if (defaultModel && !state.model) {
-        state.model = defaultModel;
+        const [base_model, model_type, model_name] = defaultModel.split('/');
+        state.model = {
+          id: defaultModel,
+          name: model_name,
+          type: model_type,
+          base_model: base_model,
+        };
       }
     });
   },

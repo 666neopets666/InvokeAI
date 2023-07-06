@@ -34,7 +34,7 @@ export const buildCanvasInpaintGraph = (
   const {
     positivePrompt,
     negativePrompt,
-    model: modelId,
+    model: currentModel,
     cfgScale: cfg_scale,
     scheduler,
     steps,
@@ -57,7 +57,7 @@ export const buildCanvasInpaintGraph = (
   // We may need to set the inpaint width and height to scale the image
   const { scaledBoundingBoxDimensions, boundingBoxScaleMethod } = state.canvas;
 
-  const model = modelIdToMainModelField(modelId);
+  const model = modelIdToMainModelField(currentModel?.id || '');
 
   const graph: NonNullableGraph = {
     id: INPAINT_GRAPH,
